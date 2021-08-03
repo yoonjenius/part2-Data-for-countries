@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import ShowUserQueries from './components/ShowUserQueries';
 
-function App() {
+const App = () => {
+  const [findInput, setFindInput] = useState('ko');
+  const [countriesArray, setCountriesArray] = useState([]);
+  
+  // useEffect(()=> {
+  //   axios.get('http://localhost:3001/countries').then(response => {
+  //     setCountriesArray(response.data);
+  //     console.log("countriesArray", countriesArray);
+  //   });
+  // }, []);
+  const hook = () => {
+    axios.get('http://localhost:3001/countries').then(response=>{
+      setCountriesArray(response.data);
+      // console.log("countriesArray", countriesArray);
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+  useEffect(hook, []);
+
+  const handleInput = (event) => {
+    const inputCountry = event.target.value;
+    setFindInput(inputCountry);
+  }
+  
+  console.log("App");
+  console.log("countriesArray", countriesArray);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <p>find countires <input onChange={handleInput} value={findInput}/></p>
+      <ShowUserQueries userFindInput = {findInput} AllArray={countriesArray} />
     </div>
   );
 }
